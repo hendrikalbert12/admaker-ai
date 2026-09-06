@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>AdMaker AI</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,Arial;
+  background:#f5f7fb;
+  color:#111827
+}
+
+header{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 7%
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900
+}
+
+.logo b{
+  color:#635bff
+}
+
+.pill{
+  background:#eef2ff;
+  color:#5146e5;
+  padding:8px 12px;
+  border-radius:99px;
+  font-size:13px;
+  font-weight:700
+}
+
+main{
+  max-width:1100px;
+  margin:44px auto;
+  padding:0 20px
+}
+
+.hero{
+  text-align:center;
+  margin-bottom:34px
+}
+
+.hero h1{
+  font-size:48px;
+  line-height:1.03;
+  margin:0 0 12px
+}
+
+.hero p{
+  color:#6b7280;
+  font-size:18px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:400px 1fr;
+  gap:24px
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:20px;
+  padding:24px;
+  box-shadow:0 12px 35px #1118270a
+}
+
+label{
+  display:block;
+  font-size:14px;
+  font-weight:750;
+  margin:14px 0 7px
+}
+
+input,textarea,select{
+  width:100%;
+  padding:13px;
+  border:1px solid #d1d5db;
+  border-radius:11px;
+  font:inherit
+}
+
+textarea{
+  min-height:85px;
+  resize:vertical
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:11px;
+  background:#635bff;
+  color:white;
+  padding:14px;
+  margin-top:18px;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer
+}
+
+button:disabled{
+  opacity:.6
+}
+
+.dark{
+  background:#111827
+}
+
+.error{
+  display:none;
+  color:#b91c1c;
+  background:#fef2f2;
+  border-radius:10px;
+  padding:11px;
+  margin-top:12px
+}
+
+.empty{
+  text-align:center;
+  color:#6b7280;
+  padding:80px 20px
+}
+
+.output{
+  display:none
+}
+
+.box{
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:16px;
+  margin-top:13px
+}
+
+.label{
+  font-size:11px;
+  color:#6b7280;
+  font-weight:800;
+  letter-spacing:.08em
+}
+
+.box h2{
+  margin:6px 0
+}
+
+.box p{
+  line-height:1.55
+}
+
+.tags span{
+  display:inline-block;
+  background:#eef2ff;
+  color:#5146e5;
+  border-radius:8px;
+  padding:6px 9px;
+  margin:4px;
+  font-size:13px
+}
+
+.preview{
+  width:100%;
+  border-radius:14px;
+  display:none;
+  margin-top:14px
+}
+
+@media(max-width:800px){
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .hero h1{
+    font-size:38px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">AdMaker <b>AI</b></div>
+  <div class="pill">Text + Image AI</div>
+</header>
+
+<main>
+
+<div class="hero">
+  <h1>Van idee naar reclame<br>in seconden.</h1>
+  <p>Laat AI je advertentietekst én reclamebeeld maken.</p>
+</div>
+
+<div class="grid">
+
+<section class="card">
+
+<h2>Campagne</h2>
+
+<label>Bedrijfsnaam</label>
+<input id="company" placeholder="Bijv. De Boer Detailing">
+
+<label>Product of dienst</label>
+<textarea id="product" placeholder="Bijv. professionele autodetailing"></textarea>
+
+<label>Doelgroep</label>
+<input id="audience" placeholder="Bijv. jongeren met luxe auto's">
+
+<label>Platform</label>
+<select id="platform">
+  <option>Instagram</option>
+  <option>TikTok</option>
+  <option>Facebook</option>
+  <option>Instagram + TikTok</option>
+</select>
+
+<label>Stijl</label>
+<select id="style">
+  <option>Luxe & professioneel</option>
+  <option>Stoer & opvallend</option>
+  <option>Modern & minimalistisch</option>
+  <option>Grappig & energiek</option>
+</select>
+
+<button id="go" onclick="run()">
+  ✨ Maak complete reclame
+</button>
+
+<div id="error" class="error"></div>
+
+</section>
+
+<section class="card">
+
+<div id="empty" class="empty">
+  <h2>Je resultaat komt hier</h2>
+  <p>AI maakt tekst, social caption, hashtags en een reclamebeeld.</p>
+</div>
+
+<div id="output" class="output">
+
+<h2>Jouw reclame</h2>
+
+<img id="preview" class="preview" alt="AI reclamebeeld">
+
+<div class="box">
+  <div class="label">HEADLINE</div>
+  <h2 id="headline"></h2>
+</div>
+
+<div class="box">
+  <div class="label">ADVERTENTIETEKST</div>
+  <p id="adtext"></p>
+</div>
+
+<div class="box">
+  <div class="label">CALL-TO-ACTION</div>
+  <p id="cta"></p>
+</div>
+
+<div class="box">
+  <div class="label">SOCIAL CAPTION</div>
+  <p id="caption"></p>
+</div>
+
+<div class="box">
+  <div class="label">HASHTAGS</div>
+  <div class="tags" id="tags"></div>
+</div>
+
+<button class="dark" onclick="run()">
+  🔄 Maak een nieuwe variant
+</button>
+
+</div>
+
+</section>
+
+</div>
+</main>
+
+<script>
+
+async function run(){
+
+  const btn=document.getElementById("go");
+  const err=document.getElementById("error");
+
+  btn.disabled=true;
+  btn.textContent="⏳ AI is bezig...";
+  err.style.display="none";
+
+  const body={
+    company:document.getElementById("company").value,
+    product:document.getElementById("product").value,
+    audience:document.getElementById("audience").value,
+    platform:document.getElementById("platform").value,
+    style:document.getElementById("style").value
+  };
+
+  try{
+
+    const [tx,im]=await Promise.all([
+
+      fetch("/api/generate",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(body)
+      }),
+
+      fetch("/api/image",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(body)
+      })
+
+    ]);
+
+    const t=await tx.json();
+    const i=await im.json();
+
+    if(!tx.ok) throw new Error(t.error);
+    if(!im.ok) throw new Error(i.error);
+
+    document.getElementById("empty").style.display="none";
+    document.getElementById("output").style.display="block";
+
+    const preview=document.getElementById("preview");
+
+    preview.src=i.image;
+    preview.style.display="block";
+
+    document.getElementById("headline").textContent=t.headline;
+    document.getElementById("adtext").textContent=t.ad_text;
+    document.getElementById("cta").textContent=t.call_to_action;
+    document.getElementById("caption").textContent=t.social_caption;
+
+    document.getElementById("tags").innerHTML=
+      (t.hashtags||[])
+      .map(x=>`<span>${x}</span>`)
+      .join("");
+
+  }catch(e){
+
+    err.textContent=e.message;
+    err.style.display="block";
+
+  }finally{
+
+    btn.disabled=false;
+    btn.textContent="✨ Maak complete reclame";
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
