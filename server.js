@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json({ limit: "2mb" }));
 app.use(express.static("public"));
-
+app.get("/", (req, res) => res.sendFile("index.html", { root: "public" }));
 const port = process.env.PORT || 3000;
 
 function client() {
